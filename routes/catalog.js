@@ -5,7 +5,7 @@ const passport = require("passport");
 //Import controllers
 const {
   addCategory,
-  aupdateCategory,
+  updateCategory,
   deleteCategory,
   getCategories,
   getCategory
@@ -26,7 +26,7 @@ router.post(
 router.put(
   "/:id",
   passport.authenticate("jwt-admin", { session: false }),
-  aupdateCategory
+  updateCategory
 );
 
 // @route   DELETE /catalog/:id
@@ -39,7 +39,7 @@ router.delete(
 );
 
 // @route   GET /catalog
-// @desc    GET existing categories
+// @desc    GET existing categoriesReducer
 // @access  Public
 router.get("/", getCategories);
 

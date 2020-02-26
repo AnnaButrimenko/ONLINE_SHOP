@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const path = require("path");
+const cors = require("cors");
 require("dotenv").config();
 
 const globalConfigs = require("./routes/globalConfigs");
@@ -24,8 +25,11 @@ const shippingMethods = require("./routes/shippingMethods");
 const paymentMethods = require("./routes/paymentMethods");
 const partners = require("./routes/partners");
 const mainRoute = require("./routes/index");
+const sendLetter = require('./routes/subscribersLeters');
 
 const app = express();
+app.use(cors());
+
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,6 +37,7 @@ app.use(bodyParser.json());
 
 // DB Config
 const db = require("./config/keys").mongoURI;
+
 
 // Connect to MongoDB
 mongoose
@@ -47,26 +52,31 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 // Use Routes
-app.use("/configs", globalConfigs);
-app.use("/customers", customers);
-app.use("/catalog", catalog);
-app.use("/products", products);
-app.use("/colors", colors);
-app.use("/sizes", sizes);
-app.use("/filters", filters);
-app.use("/subscribers", subscribers);
-app.use("/cart", cart);
-app.use("/orders", orders);
-app.use("/links", links);
-app.use("/pages", pages);
-app.use("/slides", slides);
-app.use("/wishlist", wishlist);
-app.use("/comments", comments);
-app.use("/shipping-methods", shippingMethods);
-app.use("/payment-methods", paymentMethods);
-app.use("/partners", partners);
-app.use("/", mainRoute);
+app.use("/api/configs", globalConfigs);
+app.use("/api/customers", customers);
+app.use("/api/catalog", catalog);
+app.use("/api/products", products);
+app.use("/api/colors", colors);
+app.use("/api/sizes", sizes);
+app.use("/api/filters", filters);
+app.use("/api/subscribers", subscribers);
+app.use("/api/cart", cart);
+app.use("/api/orders", orders);
+app.use("/api/links", links);
+app.use("/api/pages", pages);
+app.use("/api/slides", slides);
+app.use("/api/wishlist", wishlist);
+app.use("/api/comments", comments);
+app.use("/api/shipping-methods", shippingMethods);
+app.use("/api/payment-methods", paymentMethods);
+app.use("/api/partners", partners);
+// app.use("/", mainRoute);
 
+app.use(express.static(path.resolve(__dirname, 'client/build')));
+
+app.get('*', function(request, response) {
+  response.sendFile(path.resolve(__dirname, 'client/build', 'index.html'));
+});
 // Server static assets if in production
 if (process.env.NODE_ENV === "production") {
   // Set static folder
@@ -76,6 +86,8 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
+// sendLetter(app);
 
 const port = process.env.PORT || 5000;
 

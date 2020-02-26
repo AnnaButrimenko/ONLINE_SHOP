@@ -266,7 +266,6 @@ exports.deleteProductFromCart = async (req, res, next) => {
         cartData.products = cart.products.filter(
           item => item.product.toString() !== req.params.productId
         );
-
         const updatedCart = queryCreator(cartData);
 
         Cart.findOneAndUpdate(

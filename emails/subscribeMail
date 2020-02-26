@@ -1,0 +1,9 @@
+module.exports =(user)=>{
+  return {
+      to:user,
+      from: 'admin@sutulaia-sobaka.com',
+      subject: 'subscribtion confirmation',
+      html: `<h1>Thanks for subscribe</h1>
+<a href="http://localhost:3005/confirm/${user}">confirm</a>`
+  }
+};

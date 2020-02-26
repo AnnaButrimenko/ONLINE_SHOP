@@ -1,0 +1,16 @@
+{
+  "products": [
+    {
+      "url": "https://www.wmf.com/media/flexslider/Teaser_1170x570px_WMF_Dish_ohneText-b_hne.jpg",
+      "id": "12345"
+    },
+    {
+      "url": "https://www.wmf.com/media/flexslider/impulse-buehne.jpg",
+      "id": "12345"
+    },
+    {
+      "url": "https://www.wmf.com/media/flexslider/ProfessionalCoffeeMachines_Slider_1170x500_1.jpg",
+      "id": "12345"
+    }
+  ]
+}

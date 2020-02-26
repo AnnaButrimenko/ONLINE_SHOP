@@ -1,4 +1,4 @@
-const excludedParams = ["perPage", "startPage", "minPrice", "maxPrice"];
+const excludedParams = ["perPage", "startPage", "minPrice", "maxPrice", "sort"];
 
 module.exports = function filterParser(filtersQueryString) {
   const mongooseQuery = {};
@@ -12,7 +12,7 @@ module.exports = function filterParser(filtersQueryString) {
 
   return Object.keys(filtersQueryString).reduce(
     (mongooseQuery, filterParam) => {
-      if (filtersQueryString[filterParam].includes(",")) {
+      if (filtersQueryString[filterParam].includes(",") && !excludedParams.includes(filterParam)) {
         mongooseQuery[filterParam] = {
           $in: filtersQueryString[filterParam]
             .split(",")

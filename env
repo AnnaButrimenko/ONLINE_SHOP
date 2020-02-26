@@ -1,2 +1,2 @@
-MONGO_URI='mongodb+srv://mezherman:<password>@fem3-fp-database-vnckj.mongodb.net/test?retryWrites=true&w=majority'
+MONGO_URI='mongodb+srv://mezherman:ITm_fem3@fem3-fp-database-vnckj.mongodb.net/test?retryWrites=true&w=majority'
 SECRET_OR_KEY='IT_Monsters'

@@ -1,14 +1,14 @@
-const Cart = require("../models/Cart");
-const Order = require("../models/Order");
-const Product = require("../models/Product");
-const sendMail = require("../commonHelpers/mailSender");
-const validateOrderForm = require("../validation/validationHelper");
-const queryCreator = require("../commonHelpers/queryCreator");
-const productAvailibilityChecker = require("../commonHelpers/productAvailibilityChecker");
-const subtractProductsFromCart = require("../commonHelpers/subtractProductsFromCart");
-const _ = require("lodash");
+const Cart = require('../models/Cart');
+const Order = require('../models/Order');
+const Product = require('../models/Product');
+const sendMail = require('../commonHelpers/mailSender');
+const validateOrderForm = require('../validation/validationHelper');
+const queryCreator = require('../commonHelpers/queryCreator');
+const productAvailibilityChecker = require('../commonHelpers/productAvailibilityChecker');
+const subtractProductsFromCart = require('../commonHelpers/subtractProductsFromCart');
+const _ = require('lodash');
 
-const uniqueRandom = require("unique-random");
+const uniqueRandom = require('unique-random');
 const rand = uniqueRandom(1000000, 9999999);
 
 exports.placeOrder = async (req, res, next) => {
@@ -18,15 +18,15 @@ exports.placeOrder = async (req, res, next) => {
     let cartProducts = [];
 
     if (req.body.deliveryAddress) {
-      order.deliveryAddress = JSON.parse(req.body.deliveryAddress);
+      order.deliveryAddress = req.body.deliveryAddress;
     }
 
     if (req.body.shipping) {
-      order.shipping = JSON.parse(req.body.shipping);
+      order.shipping = req.body.shipping;
     }
 
     if (req.body.paymentInfo) {
-      order.paymentInfo = JSON.parse(req.body.paymentInfo);
+      order.paymentInfo = (req.body.paymentInfo);
     }
 
     if (req.body.customerId) {
@@ -38,13 +38,13 @@ exports.placeOrder = async (req, res, next) => {
     if (!req.body.products && cartProducts.length < 1) {
       res
         .status(400)
-        .json({ message: "The list of products is required, but absent!" });
+        .json({ message: 'The list of products is required, but absent!' });
     }
 
     if (cartProducts.length > 0) {
       order.products = _.cloneDeep(cartProducts);
     } else {
-      order.products = JSON.parse(req.body.products);
+      order.products = req.body.products;
     }
 
     order.totalSum = order.products.reduce(
@@ -59,13 +59,18 @@ exports.placeOrder = async (req, res, next) => {
 
     if (!productAvailibilityInfo.productsAvailibilityStatus) {
       res.json({
-        message: "Some of your products are unavailable for now",
+        message: 'Some of your products are unavailable for now',
         productAvailibilityInfo
       });
     } else {
       const subscriberMail = req.body.email;
       const letterSubject = req.body.letterSubject;
-      const letterHtml = req.body.letterHtml;
+      const letterHtml =
+        `<h1>Your order №${order.orderNo} is placed. </h1>
+        <p>Looking forward to see you again soon. In case of any questions - we are happy to help!</p>
+        <p>You can always check your orders in <a href="http://wmf-group.herokuapp.com/orders">PROFILE</a>.</p>
+        <p>Press here to go to <a href="http://wmf-group.herokuapp.com">HOME</a> page.</p>
+        <p>Sincerely, your WMF team.</p>`;
 
       const { errors, isValid } = validateOrderForm(req.body);
 
@@ -77,35 +82,80 @@ exports.placeOrder = async (req, res, next) => {
       if (!letterSubject) {
         return res.status(400).json({
           message:
-            "This operation involves sending a letter to the client. Please provide field 'letterSubject' for the letter."
+            'This operation involves sending a letter to the client. Please provide field \'letterSubject\' for the letter.'
         });
       }
 
       if (!letterHtml) {
         return res.status(400).json({
           message:
-            "This operation involves sending a letter to the client. Please provide field 'letterHtml' for the letter."
+            'This operation involves sending a letter to the client. Please provide field \'letterHtml\' for the letter.'
         });
       }
 
       const newOrder = new Order(order);
 
       if (order.customerId) {
-        newOrder.populate("customerId").execPopulate();
+        newOrder.populate('customerId').execPopulate();
       }
 
       newOrder
         .save()
-        .then(async order => {
-          const mailResult = await sendMail(
-            subscriberMail,
-            letterSubject,
-            letterHtml,
-            res
-          );
+        .then(order => {
+          order.products.map(({ product: { _id }, cartQuantity: orderedQty }) => {
+            Product.findOne({ _id: _id })
+              .then(product => {
+                if (!product) {
+                  return res.status(400).json({
+                    message: `Product with id "${_id}" is not found.`
+                  });
+                } else {
+                  const newQty = product.quantity - orderedQty;
+                  const productFields = _.cloneDeep({ quantity: newQty });
 
-          res.json({ order, mailResult });
+                  if (productFields.name) {
+                    try {
+                      productFields.name = productFields.name
+                        .toLowerCase()
+                        .trim()
+                        .replace(/\s\s+/g, ' ');
+                    } catch (err) {
+                      res.status(400).json({
+                        message: `Error happened on server: "${err}" `
+                      });
+                    }
+                  }
+
+                  const updatedProduct = queryCreator(productFields);
+
+                  Product.findOneAndUpdate(
+                    { _id },
+                    { $set: updatedProduct },
+                    { new: true }
+                  )
+                    .then(product => res.json(product))
+                    .catch(err =>
+                      res.status(400).json({
+                        message: `Error happened on server: "${err}" `
+                      })
+                    );
+                }
+              })
+              .catch(err => {
+                return res.status(400).json({
+                  message: `Error happened on server: "${err}" `
+                })
+              });
+          });
+
+          res.json({ order });
         })
+        .then(() => sendMail(
+          subscriberMail,
+          letterSubject,
+          letterHtml,
+          res
+        ))
         .catch(err =>
           res.status(400).json({
             message: `Error happened on server: "${err}" `
@@ -159,7 +209,7 @@ exports.updateOrder = (req, res, next) => {
 
         if (!productAvailibilityInfo.productsAvailibilityStatus) {
           res.json({
-            message: "Some of your products are unavailable for now",
+            message: 'Some of your products are unavailable for now',
             productAvailibilityInfo
           });
         }
@@ -179,14 +229,14 @@ exports.updateOrder = (req, res, next) => {
       if (!letterSubject) {
         return res.status(400).json({
           message:
-            "This operation involves sending a letter to the client. Please provide field 'letterSubject' for the letter."
+            'This operation involves sending a letter to the client. Please provide field \'letterSubject\' for the letter.'
         });
       }
 
       if (!letterHtml) {
         return res.status(400).json({
           message:
-            "This operation involves sending a letter to the client. Please provide field 'letterHtml' for the letter."
+            'This operation involves sending a letter to the client. Please provide field \'letterHtml\' for the letter.'
         });
       }
 
@@ -195,7 +245,7 @@ exports.updateOrder = (req, res, next) => {
         { $set: order },
         { new: true }
       )
-        .populate("customerId")
+        .populate('customerId')
         .then(async order => {
           const mailResult = await sendMail(
             subscriberMail,
@@ -236,14 +286,14 @@ exports.cancelOrder = (req, res, next) => {
       if (!letterSubject) {
         return res.status(400).json({
           message:
-            "This operation involves sending a letter to the client. Please provide field 'letterSubject' for the letter."
+            'This operation involves sending a letter to the client. Please provide field \'letterSubject\' for the letter.'
         });
       }
 
       if (!letterHtml) {
         return res.status(400).json({
           message:
-            "This operation involves sending a letter to the client. Please provide field 'letterHtml' for the letter."
+            'This operation involves sending a letter to the client. Please provide field \'letterHtml\' for the letter.'
         });
       }
 
@@ -252,7 +302,7 @@ exports.cancelOrder = (req, res, next) => {
         { canceled: true },
         { new: true }
       )
-        .populate("customerId")
+        .populate('customerId')
         .then(async order => {
           const mailResult = await sendMail(
             subscriberMail,
@@ -297,7 +347,7 @@ exports.deleteOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
   Order.find({ customerId: req.user.id })
-    .populate("customerId")
+    .populate('customerId')
     .then(orders => res.json(orders))
     .catch(err =>
       res.status(400).json({
@@ -308,7 +358,7 @@ exports.getOrders = (req, res, next) => {
 
 exports.getOrder = (req, res, next) => {
   Order.findOne({ orderNo: req.params.orderNo })
-    .populate("customerId")
+    .populate('customerId')
     .then(order => res.json(order))
     .catch(err =>
       res.status(400).json({

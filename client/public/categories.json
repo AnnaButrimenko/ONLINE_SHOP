@@ -1,0 +1,68 @@
+{
+  "Pots": {
+    "subCategories": ["555666", "777", "888", "999", "1010"],
+    "title": "Preparing",
+    "desc": "Chop, slice, foam, stir! Until everything is just right. Our knives and kitchen gadgets can help.",
+    "img": "./img/categories/cat1.jpg",
+    "products": [
+    {
+        "id": "1",
+        "title": "Set 66 DENVER",
+        "currentPrice": "304.00",
+        "specialPrice": "€149.99",
+        "url": "https://www.wmf.com/media/catalog/product/cache/2/small_image/265x/9df78eab33525d08d6e5fb8d27136e95/1/1/11_4800_6041_100.jpg",
+        "art": "592.213.49",
+        "color": "light grey"
+    },
+    {
+        "id": "2",
+        "title": "Set 66 DENVER",
+        "currentPrice": "304.00",
+        "specialPrice": "€149.99",
+        "url": "https://www.wmf.com/media/catalog/product/cache/2/small_image/265x/9df78eab33525d08d6e5fb8d27136e95/1/1/11_4800_6041_100.jpg",
+        "art": "592.213.49",
+        "color": "light grey"
+    }
+    ]
+  },
+  "Frying pans": {
+    "subCategories": [],
+    "title": "title1",
+    "desc": "desc1",
+    "img": "./img/categories/cat1.jpg",
+    "products": [
+                   {
+                       "id": "cat2_1",
+                       "title": "Set 66 DENVER",
+                       "currentPrice": "304.00",
+                       "specialPrice": "€149.99",
+                       "url": "https://www.wmf.com/media/catalog/product/cache/2/small_image/265x/9df78eab33525d08d6e5fb8d27136e95/1/1/11_4800_6041_100.jpg",
+                       "art": "592.213.49",
+                       "color": "light grey"
+                   },
+                   {
+                       "id": "cat2_2",
+                       "title": "Set 66 DENVER",
+                       "currentPrice": "304.00",
+                       "specialPrice": "€149.99",
+                       "url": "https://www.wmf.com/media/catalog/product/cache/2/small_image/265x/9df78eab33525d08d6e5fb8d27136e95/1/1/11_4800_6041_100.jpg",
+                       "art": "592.213.49",
+                       "color": "light grey"
+                   }
+                   ]
+  },
+  "Tableware": {
+    "subCategories": ["aaa", "bbb"],
+    "title": "title1",
+    "desc": "desc1",
+    "img": "./img/categories/cat1.jpg",
+    "products":[]
+  },
+  "Bakeware": {
+    "subCategories": [],
+    "title": "title1",
+    "desc": "desc1",
+    "img": "./img/categories/cat1.jpg",
+    "products": []
+  }
+}
