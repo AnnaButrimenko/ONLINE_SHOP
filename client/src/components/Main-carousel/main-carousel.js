@@ -32,11 +32,11 @@ function MainSlider ({ fetchSlides }) {
   const carouselContent = () => mainSlides.map((item) => {
     const { imageUrl, title, description, route, _id } = item;
     return (
-      <Link to={route} key={_id} className={mainCarouselClasses.linkContainer}>
-        <div className={mainCarouselClasses.background} style={addBackgroundImg(imageUrl)}>
-          <div className={mainCarouselClasses.textBlock}>
-            <h3 className={mainCarouselClasses.title}>{title}</h3>
-            <p className={mainCarouselClasses.description}>{description}</p>
+      <div className={mainCarouselClasses.background} style={addBackgroundImg(imageUrl)}>
+        <div className={mainCarouselClasses.textBlock}>
+          <h3 className={mainCarouselClasses.title}>{title}</h3>
+          <p className={mainCarouselClasses.description}>{description}</p>
+          <Link to={route} key={_id} className={mainCarouselClasses.link}>
             <Button
               size="large"
               className={mainCarouselClasses.showMore}
@@ -46,9 +46,9 @@ function MainSlider ({ fetchSlides }) {
             >
               Show more
             </Button>
-          </div>
+          </Link>
         </div>
-      </Link>
+      </div>
     )
   });
 

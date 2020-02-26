@@ -150,8 +150,8 @@ const useStylesMainCarousel = makeStyles((theme) => ({
       display: 'block',
     }
   },
-  linkContainer: {
-    overflow: 'scroll',
+  link: {
+    textDecoration: 'none',
   },
 
 }));
