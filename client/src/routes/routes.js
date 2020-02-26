@@ -26,6 +26,7 @@ import ForbiddenPage from '../pages/forbidden/forbidden'
 
 export default function Routes() {
   const { loggedIn, customer } = useSelector((state) => state.user);
+  const { registration } = useSelector((state) => state.user);
   const [protectedClosing, setProtectedClosing] = useState(false);
   const mainCategory = useSelector((state) => state.categoriesReducer.catalog.mainCategories);
   const [modalIsVisible, setModalVisibility] = useState(!loggedIn);
@@ -33,7 +34,7 @@ export default function Routes() {
     setModalVisibility(false);
   };
 
-  if (!loggedIn && !modalIsVisible) {
+  if (!loggedIn && !modalIsVisible && !registration) {
     setModalVisibility(true);
     setProtectedClosing(true)
   }

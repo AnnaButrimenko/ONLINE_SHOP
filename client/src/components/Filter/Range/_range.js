@@ -19,11 +19,14 @@ const useStyles = makeStyles({
     },
     '& input[type=number]::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',
-      margin: 0
+      margin: 0,
     },
     '&.MuiInput-underline::after': {
       content: 'none'
     },
+    '& .MuiInputBase-inputMarginDense': {
+      textAlign: 'center',
+    }
   }
 });
 

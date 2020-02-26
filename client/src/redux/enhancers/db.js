@@ -2,7 +2,6 @@ import * as ServicesCart from '../../services/cart';
 import { getFavoriteProducts } from '../../services/favorites';
 import getCategories from '../../services/get-categories';
 import getCustomer from '../../services/customer';
-import { FETCH_CATALOG_FAILURE } from '../actions/actionTypes';
 
 const db = (store) => (next) => async (action) => {
   const { loggedIn, token } = store.getState().user;

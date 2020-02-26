@@ -17,9 +17,7 @@ describe('products actions', () => {
   it('productsLoaded()', () => {
     const expectedAction = {
       type: t.FETCH_PRODUCTS_SUCCESS,
-      payload: {
-        products: [1, 2, 3]
-      }
+      payload: [1, 2, 3]
     }
     expect(productsLoaded([1, 2, 3])).toEqual(expectedAction)
   })

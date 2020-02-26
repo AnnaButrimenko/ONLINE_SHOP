@@ -75,7 +75,7 @@ const FilterPanel = (props) => {
     <div>
       <ExpansionPanel className={classes.root} square defaultExpanded={Boolean(isShowPanel[width])}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>{name}</Typography>
+          <Typography className={classes.title}>{name}</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           {name === 'Color' && panelFilters(colors, filterResults.color)}

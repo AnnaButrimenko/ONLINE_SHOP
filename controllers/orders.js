@@ -68,6 +68,8 @@ exports.placeOrder = async (req, res, next) => {
       const letterHtml =
         `<h1>Your order №${order.orderNo} is placed. </h1>
         <p>Looking forward to see you again soon. In case of any questions - we are happy to help!</p>
+        <p>You can always check your orders in <a href="http://wmf-group.herokuapp.com/orders">PROFILE</a>.</p>
+        <p>Press here to go to <a href="http://wmf-group.herokuapp.com">HOME</a> page.</p>
         <p>Sincerely, your WMF team.</p>`;
 
       const { errors, isValid } = validateOrderForm(req.body);

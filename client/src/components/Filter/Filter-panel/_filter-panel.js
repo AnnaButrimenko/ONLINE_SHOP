@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiExpansionPanelDetails-root': {
       flexDirection: 'column'
     }
+  },
+  title: {
+    fontWeight: 'bold'
   }
 }));
 
